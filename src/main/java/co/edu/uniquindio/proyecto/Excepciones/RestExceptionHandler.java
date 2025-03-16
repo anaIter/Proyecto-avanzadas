@@ -1,8 +1,5 @@
 package co.edu.uniquindio.proyecto.Excepciones;
-
-
-
-
+/*
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,8 +15,9 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MensajeDTO<String>> manejarValidacion(MethodArgumentNotValidException ex) {
+    public ResponseEntity<MensajeDTO<String>> manejarValidacion(MethodArgumentNotValidException e) {
         // Puedes procesar 'ex' para obtener detalles de los errores de validación y construir una respuesta más detallada
         return ResponseEntity.badRequest().body(new MensajeDTO<>(true, "Error en validación"));
     }
 }
+*/

@@ -1,6 +1,5 @@
 package co.edu.uniquindio.proyecto.entidad;
 
-
 /*
 import lombok.*;
 import org.springframework.data.annotation.Id;
