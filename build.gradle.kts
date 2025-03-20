@@ -25,23 +25,30 @@ repositories {
 }
 
 dependencies {
-    // Spring Boot
+// Spring Boot Starters
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Spring Boot DevTools (solo en runtime y opcional)
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // MySQL Connector
+    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    // Swagger / OpenAPI (Actualizar a 2.3.0)
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    // Spring Boot Testing
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 
-    // Seguridad JWT
+    // JWT Seguridad
     implementation("com.nimbusds:nimbus-jose-jwt:9.31")
 
-    // Dependencias para testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // OpenAPI / Swagger (versión 2.3.0)
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 }
 
 tasks.withType<Test> {

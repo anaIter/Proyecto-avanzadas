@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.controladores;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,16 +9,20 @@ import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/usuarios")
+@SecurityRequirement(name = "BearerAuth")
 public class UsuarioControlador {
 
+    /*
     @PostMapping("/registro")
     public ResponseEntity<MensajeDTO<String>> registrarUsuario(@Valid @RequestBody Map<String, String> usuarioDTO) {
         // TODO: Llamar al servicio para registrar al usuario
         return ResponseEntity.status(201).body(new MensajeDTO<>(false, "Usuario registrado correctamente"));
     }
+     */
 
     @PostMapping("/activar")
     public ResponseEntity<MensajeDTO<String>> activarCuenta(@Valid @RequestBody Map<String, String> datosActivacion) {
