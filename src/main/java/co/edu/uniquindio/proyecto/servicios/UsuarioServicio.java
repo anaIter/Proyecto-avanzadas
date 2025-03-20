@@ -1,7 +1,7 @@
 package co.edu.uniquindio.proyecto.servicios;
 
 
-/*
+
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
@@ -15,4 +15,3 @@ public interface UsuarioServicio {
     UsuarioDTO obtener(String id) throws Exception;
     List<UsuarioDTO> listarTodos(String nombre, String ciudad);
 }
-*/
