@@ -26,7 +26,8 @@ repositories {
 
 dependencies {
 // Spring Boot Starters
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
@@ -34,7 +35,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // MySQL Connector
-    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
+    //runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
@@ -49,6 +50,7 @@ dependencies {
 
     // OpenAPI / Swagger (versión 2.3.0)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
 }
 
 tasks.withType<Test> {

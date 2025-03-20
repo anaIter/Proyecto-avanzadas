@@ -1,10 +1,12 @@
 package co.edu.uniquindio.proyecto.entidad;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /*
 import lombok.*;
@@ -29,8 +31,25 @@ public class Usuario {
 }
 */
 
-@Entity
-@Table(name = "usuarios")
+
+/*import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "usuarios")
+public class Usuario {
+    @Id
+    private String id;  // En MongoDB, los IDs suelen ser String (ObjectId)
+
+    private String nombre;
+    private String email;
+}
+*/
+
+
+
+//@Entity
+//@Table(name = "usuarios")
+@Document(collection = "usuarios")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,13 +57,12 @@ public class Usuario {
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
+    //@Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String password;
 
 }

@@ -15,11 +15,21 @@ public interface UsuarioRepositorio extends MongoRepository<Usuario, String> {
 }
 */
 
+//Implementacion del repositorio de MongoDB
+
+/*
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface UsuarioRepository extends MongoRepository<Usuario, String> {
+}*/
+
 import co.edu.uniquindio.proyecto.entidad.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
+//import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 
 import java.util.Optional;
 
-public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepositorio extends MongoRepository<Usuario, String> {
     Optional<Usuario> findByEmail(String email);
 }
