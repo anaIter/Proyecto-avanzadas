@@ -1,10 +1,14 @@
 package co.edu.uniquindio.proyecto.entidad;
 
 //import jakarta.persistence.*;
+import co.edu.uniquindio.proyecto.Enum.Ciudad;
+import co.edu.uniquindio.proyecto.Enum.EstadoUsuario;
+import co.edu.uniquindio.proyecto.Enum.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -57,12 +61,25 @@ public class Usuario {
 public class Usuario {
 
     @Id
-    private String id;
+    private ObjectId id;
 
-    //@Column(nullable = false, unique = true)
     private String email;
 
-    //@Column(nullable = false)
     private String password;
+
+    private String nombre;
+
+    private String telefono;
+
+    private String direccion;
+
+    private Rol rol;
+
+    private EstadoUsuario estado;
+
+    private Ciudad ciudad;
+
+    private CodigoValidacion codigoValidacion;
+
 
 }

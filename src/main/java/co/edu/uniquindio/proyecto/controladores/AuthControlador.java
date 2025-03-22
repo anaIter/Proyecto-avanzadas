@@ -5,9 +5,9 @@ import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.RegistroDTO;
 import co.edu.uniquindio.proyecto.servicios.AuthServicio;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import co.edu.uniquindio.proyecto.servicios.impl.AuthServicioImpl;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -17,7 +17,7 @@ public class AuthControlador {
 
     private final AuthServicio authService;
 
-    public AuthControlador(AuthServicio authService) {
+    public AuthControlador(@Qualifier("authServicio") AuthServicio authService) {
         this.authService = authService;
     }
 

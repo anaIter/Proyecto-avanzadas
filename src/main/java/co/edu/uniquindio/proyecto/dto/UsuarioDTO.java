@@ -9,9 +9,11 @@ import lombok.Data;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioDTO {
+
     private String nombre;
     private String email;
     private String contrasena; // solo al registrar
     private String telefono;
     private String direccion;
+
 }
