@@ -81,5 +81,4 @@ public class Usuario {
 
     private CodigoValidacion codigoValidacion;
 
-
 }

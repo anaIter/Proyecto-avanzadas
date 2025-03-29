@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/saludo") // Prefijo común para todas las rutas del controlador
-@SecurityRequirement(name = "BearerAuth")
 public class SaludoControlador {
 
     @GetMapping

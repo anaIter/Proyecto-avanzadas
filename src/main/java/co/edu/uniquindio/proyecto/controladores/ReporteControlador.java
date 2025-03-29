@@ -13,7 +13,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reportes")
-@SecurityRequirement(name = "BearerAuth")
 public class ReporteControlador {
 
     @PutMapping("/{id}")

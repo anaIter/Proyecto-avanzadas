@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.dto;
 
+import co.edu.uniquindio.proyecto.Enum.EstadoUsuario;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class UsuarioDTO {
     private String contrasena; // solo al registrar
     private String telefono;
     private String direccion;
+    private EstadoUsuario estado;
 
 }

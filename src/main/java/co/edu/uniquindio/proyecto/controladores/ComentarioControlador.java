@@ -15,7 +15,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reportes")
-@SecurityRequirement(name = "BearerAuth")
 public class ComentarioControlador {
 
     @PostMapping("/{id}/comentarios")

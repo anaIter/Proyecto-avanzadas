@@ -12,7 +12,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notificaciones")
-@SecurityRequirement(name = "BearerAuth")
 public class NotificacionControlador {
 
     @PostMapping("/correo")
