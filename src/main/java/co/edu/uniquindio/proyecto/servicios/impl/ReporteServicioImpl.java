@@ -54,7 +54,7 @@ public ResponseEntity<?> obtenerReportePorId(String idReporte) {
 
 public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
     try {
-        return reporteRepositorio.findByUsuarioId(new ObjectId(idUsuario));
+        return reporteRepositorio.findByIdUsuario(new ObjectId(idUsuario));
     } catch (IllegalArgumentException e) {
         return List.of(); // Retorna una lista vacía si el ID es inválido
     }
