@@ -1,8 +1,9 @@
 package co.edu.uniquindio.proyecto.entidad;
 
-/*
+
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
+@Getter
 public class Reporte {
     @Id
     private String id;
@@ -24,6 +27,5 @@ public class Reporte {
     private String estado; // Ej: "Pendiente", "Resuelto"
     private LocalDateTime fechaCreacion;
     private List<String> imagenes;
-    private String idUsuario; // Referencia al usuario creador
+    private ObjectId idUsuario; // Referencia al usuario creador
 }
-*/

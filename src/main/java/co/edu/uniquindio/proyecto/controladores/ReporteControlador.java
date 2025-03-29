@@ -1,50 +1,57 @@
 package co.edu.uniquindio.proyecto.controladores;
 
+
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
+import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.servicios.impl.ReporteServicioImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/reportes")
+@RequiredArgsConstructor
 public class ReporteControlador {
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MensajeDTO<String>> editarReporte(@PathVariable String id,
-                                                            @Valid @RequestBody Map<String, Object> datosReporte) {
-        // TODO: Actualizar los datos del reporte
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte actualizado correctamente"));
+    private final ReporteServicioImpl reporteServicio;
+
+    @PostMapping
+    public ResponseEntity<MensajeDTO<String>> crearReporte(@RequestBody Reporte reporte) {
+        try {
+            MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(new MensajeDTO<>(true, "Error al crear el reporte: " + e.getMessage()));
+        }
     }
 
-    @PutMapping("/{id}/priorizar")
-    public ResponseEntity<MensajeDTO<String>> priorizarReporte(@PathVariable String id) {
-        // TODO: Marcar el reporte como prioritario
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte priorizado correctamente"));
+
+    // Obtener todos los reportes
+    @GetMapping
+    public ResponseEntity<List<Reporte>> obtenerTodosLosReportes() {
+        List<Reporte> reportes = reporteServicio.obtenerTodosLosReportes();
+        return ResponseEntity.ok(reportes);
     }
 
-    @PutMapping("/{id}/moderar")
-    public ResponseEntity<MensajeDTO<String>> moderarReporte(@PathVariable String id,
-                                                             @Valid @RequestBody Map<String, String> estado) {
-        // TODO: Cambiar estado a moderado
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte moderado correctamente"));
+    // Obtener un reporte por su ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerReportePorId(@PathVariable String id) {
+        return reporteServicio.obtenerReportePorId(id);
     }
 
-    @PutMapping("/{id}/rechazar")
-    public ResponseEntity<MensajeDTO<String>> rechazarReporte(@PathVariable String id,
-                                                              @Valid @RequestBody Map<String, String> motivo) {
-        // TODO: Rechazar el reporte con razón específica
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte rechazado correctamente"));
+    // Obtener todos los reportes de un usuario por su ID
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<Reporte>> obtenerReportesPorUsuario(@PathVariable String idUsuario) {
+        List<Reporte> reportes = reporteServicio.obtenerReportesPorUsuario(idUsuario);
+        return ResponseEntity.ok(reportes);
     }
 
-    @PutMapping("/{id}/resuelto")
-    public ResponseEntity<MensajeDTO<String>> marcarComoResuelto(@PathVariable String id) {
-        // TODO: Cambiar estado a resuelto
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte marcado como resuelto"));
+    // Eliminar un reporte por su ID
+    @DeleteMapping("/{id}")
+    public MensajeDTO<String> eliminarReporte(@PathVariable String id) {
+        return reporteServicio.eliminarReporte(id);
     }
 }
