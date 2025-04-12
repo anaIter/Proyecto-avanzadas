@@ -12,10 +12,15 @@ import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -127,5 +132,4 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         logger.info("Cuenta activada para el usuario: {}", usuario.getEmail());
     }
-
 }

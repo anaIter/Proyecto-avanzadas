@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 public class Reporte {
     @Id
-    private String id;
+    private ObjectId id;
     private String titulo;
     private String descripcion;
     private String categoria;

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
+import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
@@ -19,7 +20,7 @@ public class ReporteServicioImpl implements ReporteServicio {
 private final ReporteRepositorio reporteRepositorio;
 
 
-public MensajeDTO<String> crearReporte(Reporte dto) {
+public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
     Reporte reporte = new Reporte();
     reporte.setTitulo(dto.getTitulo());
     reporte.setDescripcion(dto.getDescripcion());

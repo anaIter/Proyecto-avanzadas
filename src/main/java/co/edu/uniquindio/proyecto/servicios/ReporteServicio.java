@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios;
 
+import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ReporteServicio {
-    MensajeDTO<String> crearReporte(Reporte dto);
+    MensajeDTO<String> crearReporte(CrearReporteDTO dto);
 
     List<Reporte> obtenerTodosLosReportes();
 

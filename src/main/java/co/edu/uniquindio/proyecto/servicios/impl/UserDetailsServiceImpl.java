@@ -1,7 +1,8 @@
-package co.edu.uniquindio.proyecto.implement;
+package co.edu.uniquindio.proyecto.servicios.impl;
+
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

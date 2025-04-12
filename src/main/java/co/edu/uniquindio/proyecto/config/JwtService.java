@@ -17,12 +17,12 @@ public class JwtService {
     @Value("${security.jwt.secret}")
     private String secretKey;
 
-    private static final long EXPIRATION_TIME = 86400000; // 24 horas
+    private static final long EXPIRATION_TIME = 86400000;
 
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         try {
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username)
+                    .subject(email)
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .build();

@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.servicios;
 
 
 import co.edu.uniquindio.proyecto.dto.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 

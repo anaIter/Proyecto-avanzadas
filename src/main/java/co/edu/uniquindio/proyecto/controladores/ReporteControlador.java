@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.controladores;
 
 
+import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
 import co.edu.uniquindio.proyecto.servicios.impl.ReporteServicioImpl;
@@ -18,7 +19,7 @@ public class ReporteControlador {
     private final ReporteServicioImpl reporteServicio;
 
     @PostMapping
-    public ResponseEntity<MensajeDTO<String>> crearReporte(@RequestBody Reporte reporte) {
+    public ResponseEntity<MensajeDTO<String>> crearReporte(@RequestBody CrearReporteDTO reporte) {
         try {
             MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte);
             return ResponseEntity.ok(respuesta);
@@ -27,7 +28,6 @@ public class ReporteControlador {
                     .body(new MensajeDTO<>(true, "Error al crear el reporte: " + e.getMessage()));
         }
     }
-
 
     // Obtener todos los reportes
     @GetMapping
