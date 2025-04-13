@@ -28,6 +28,8 @@ dependencies {
 // Spring Boot Starters
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.simplejavamail:simple-java-mail:8.12.5")
