@@ -9,8 +9,20 @@ import lombok.Setter;
 @Setter
 @Getter
 @Data
-@AllArgsConstructor
 public class MensajeDTO<T> {
-    private boolean error;  // true si hubo un error, false si fue exitoso
-    private T respuesta;    // el contenido de la respuesta (mensaje, objeto, lista, etc.)
+    private boolean error;
+    private T mensaje;
+
+    public MensajeDTO(boolean error, T mensaje) {
+        this.error = error;
+        this.mensaje = mensaje;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public T getMensaje() {
+        return mensaje;
+    }
 }
