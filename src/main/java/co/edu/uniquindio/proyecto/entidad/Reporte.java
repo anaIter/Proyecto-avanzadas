@@ -27,5 +27,6 @@ public class Reporte {
     private String estado; // Ej: "Pendiente", "Resuelto"
     private LocalDateTime fechaCreacion;
     private List<String> imagenes;
+    private boolean eliminado;
     private ObjectId idUsuario; // Referencia al usuario creador
 }

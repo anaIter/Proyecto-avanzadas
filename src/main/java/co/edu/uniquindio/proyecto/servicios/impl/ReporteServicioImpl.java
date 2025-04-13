@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
+import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
@@ -61,13 +62,33 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
     }
 }
 
-public MensajeDTO<String> eliminarReporte(String id) {
-    if (reporteRepositorio.existsById(new ObjectId(id))) {
-        reporteRepositorio.deleteById(new ObjectId(id));
-        return new MensajeDTO<>(false, "Reporte eliminado correctamente");
-    } else {
-        return new MensajeDTO<>(true, "El reporte no existe");
+    public MensajeDTO<String> eliminarReporte(String id) {
+        Optional<Reporte> optionalReporte = reporteRepositorio.findById(new ObjectId(id));
+
+        if (optionalReporte.isPresent()) {
+            Reporte reporte = optionalReporte.get();
+            reporte.setEliminado(true);
+            reporteRepositorio.save(reporte);
+            return new MensajeDTO<>(false, "Reporte marcado como eliminado correctamente");
+        } else {
+            return new MensajeDTO<>(true, "El reporte no existe");
+        }
     }
-}
+
+
+    @Override
+    public MensajeDTO<String> cambiarEstadoReporte(CambiarEstadoReporteDTO dto) {
+        Optional<Reporte> opcional = reporteRepositorio.findById(new ObjectId(dto.getIdReporte()));
+
+        if (opcional.isPresent()) {
+            Reporte reporte = opcional.get();
+            reporte.setEstado(dto.getNuevoEstado());
+            reporteRepositorio.save(reporte);
+            return new MensajeDTO<>(false, "Estado del reporte actualizado correctamente");
+        } else {
+            return new MensajeDTO<>(true, "No se encontró el reporte con el ID especificado");
+        }
+    }
+
 }
 

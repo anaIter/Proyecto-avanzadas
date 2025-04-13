@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios;
 
+import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
@@ -17,4 +18,7 @@ public interface ReporteServicio {
     List<Reporte> obtenerReportesPorUsuario(String idUsuario);
 
     MensajeDTO<String> eliminarReporte(String id);
+
+    MensajeDTO<String> cambiarEstadoReporte(CambiarEstadoReporteDTO dto);
+
 }

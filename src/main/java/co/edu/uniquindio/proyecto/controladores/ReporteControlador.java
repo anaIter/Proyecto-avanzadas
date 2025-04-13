@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.controladores;
 
 
+import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
@@ -54,4 +55,13 @@ public class ReporteControlador {
     public MensajeDTO<String> eliminarReporte(@PathVariable String id) {
         return reporteServicio.eliminarReporte(id);
     }
+
+    @PutMapping("/cambiar-estado")
+    public ResponseEntity<MensajeDTO<String>> cambiarEstado(@RequestBody CambiarEstadoReporteDTO dto) {
+        MensajeDTO<String> respuesta = reporteServicio.cambiarEstadoReporte(dto);
+        return ResponseEntity.ok(respuesta);
+    }
+
+
+
 }
