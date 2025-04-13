@@ -30,6 +30,9 @@ dependencies {
     //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.simplejavamail:simple-java-mail:8.12.5")
+    implementation("org.simplejavamail:batch-module:8.12.5")
+
 
     // Spring Boot DevTools (solo en runtime y opcional)
     developmentOnly("org.springframework.boot:spring-boot-devtools")
