@@ -49,7 +49,7 @@ public class AuthServicioImpl implements AuthServicio {
         }
 
         logger.info("Usuario autenticado correctamente: {}", request.getEmail());
-        return jwtService.generateToken(usuario.getEmail());
+        return jwtService.generateToken(usuario.getEmail(),usuario.getRol());
     }
 
     @Override

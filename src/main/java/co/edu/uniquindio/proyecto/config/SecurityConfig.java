@@ -1,7 +1,6 @@
 package co.edu.uniquindio.proyecto.config;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
+import co.edu.uniquindio.proyecto.Enum.Rol;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,29 +31,37 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final JwtService jwtService;
 
     @Value("${security.jwt.secret}")
-    private String SECRET_KEY; // Se obtiene desde application.properties
+    private String SECRET_KEY;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 💡 Habilitar CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register","/api/usuarios/activar", "/error", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/usuarios/activar",
+                                "/error",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers("/api/admin/*","/api/informes/*").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api/reportes/*","/api/reportes").hasRole("CLIENTE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -62,12 +70,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {  // ✅ Agregado para CORS
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5174","http://localhost:5173","http://149.50.142.146:5173")); // Frontend permitido
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "http://149.50.142.146:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true); // Habilita envío de cookies o tokens
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
@@ -92,6 +100,7 @@ public class SecurityConfig {
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
                 throws ServletException, IOException {
+
             String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -103,24 +112,33 @@ public class SecurityConfig {
 
             try {
                 SignedJWT signedJWT = SignedJWT.parse(token);
-                if (!signedJWT.verify(new MACVerifier(SECRET_KEY.getBytes()))) {
+
+                // Verificación de firma
+                if (!signedJWT.verify(new com.nimbusds.jose.crypto.MACVerifier(SECRET_KEY.getBytes()))) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no válido");
                     return;
                 }
 
+                // Verificar expiración
                 Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
                 if (expirationTime.before(new Date())) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                     return;
                 }
 
-                String username = signedJWT.getJWTClaimsSet().getSubject();
-                UserDetails userDetails = new User(username, "", Collections.emptyList());
+                // Extraer info del token
+                String email = jwtService.extractEmail(token);
+                String rol = jwtService.extractRol(token);
+
+                // Crear UserDetails con autoridad del rol
+                UserDetails userDetails = new User(email, "", List.of(new SimpleGrantedAuthority("ROLE_" + rol)));
+
+                // Guardar en contexto de seguridad
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (ParseException | JOSEException e) {
+            } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error al procesar el token");
                 return;
             }

@@ -51,6 +51,10 @@ dependencies {
     // JWT Seguridad
     implementation("com.nimbusds:nimbus-jose-jwt:9.31")
 
+    // Cloudinary
+    implementation("com.cloudinary:cloudinary-http44:1.39.0")
+
+
     // OpenAPI / Swagger (versión 2.3.0)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
