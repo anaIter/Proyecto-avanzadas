@@ -4,14 +4,17 @@ import co.edu.uniquindio.proyecto.dto.ActivarCuentaDTO;
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
+import co.edu.uniquindio.proyecto.entidad.CodigoValidacion;
 import co.edu.uniquindio.proyecto.entidad.Usuario;
 import co.edu.uniquindio.proyecto.Enum.EstadoUsuario;
+import co.edu.uniquindio.proyecto.repositorios.CodigoValidacionRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +31,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UsuarioServicioImpl implements UsuarioServicio {
+
+    @Autowired
+    private CodigoValidacionRepositorio codigoValidacionRepositorio;
 
     private final UsuarioRepositorio usuarioRepositorio;
     private final PasswordEncoder passwordEncoder;
@@ -122,14 +128,19 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         }
 
         // Simulación de validación del código (deberías guardarlo en la BD)
-        String codigoCorrecto = "123456"; // Este código debería ser dinámico en una implementación real.
-        if (!dto.getCodigoActivacion().equals(codigoCorrecto)) {
+        CodigoValidacion codigoValidacion = codigoValidacionRepositorio
+                .findTopByIdUsuarioOrderByFechaCreacionDesc(usuario.getId());
+
+        if (codigoValidacion == null || !codigoValidacion.getCodigo().equals(dto.getCodigoActivacion())) {
             throw new Exception("El código de activación es incorrecto");
+        }
+
+        if (!codigoValidacion.estaVigente()) {
+            throw new Exception("El código ha expirado, solicita uno nuevo");
         }
 
         usuario.setEstado(EstadoUsuario.ACTIVO);
         usuarioRepositorio.save(usuario);
-
         logger.info("Cuenta activada para el usuario: {}", usuario.getEmail());
     }
 }
