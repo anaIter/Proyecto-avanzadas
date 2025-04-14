@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
+                                "/codigo-validacion",
                                 "/v3/api-docs/**"
                         ).permitAll()
                         .requestMatchers("/api/admin/*","/api/informes/*").hasRole("ADMINISTRADOR")

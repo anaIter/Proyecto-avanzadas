@@ -18,49 +18,49 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReporteServicioImpl implements ReporteServicio {
 
-private final ReporteRepositorio reporteRepositorio;
+    private final ReporteRepositorio reporteRepositorio;
 
 
-public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
-    Reporte reporte = new Reporte();
-    reporte.setTitulo(dto.getTitulo());
-    reporte.setDescripcion(dto.getDescripcion());
-    reporte.getIdUsuario();
-    reporte.setFechaCreacion(dto.getFechaCreacion());
+    public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
+        Reporte reporte = new Reporte();
+        reporte.setTitulo(dto.getTitulo());
+        reporte.setDescripcion(dto.getDescripcion());
+        reporte.getIdUsuario();
+        reporte.setFechaCreacion(dto.getFechaCreacion());
 
-    reporteRepositorio.save(reporte);
-    return new MensajeDTO<>(false, "Reporte creado exitosamente");
-}
+        reporteRepositorio.save(reporte);
+        return new MensajeDTO<>(false, "Reporte creado exitosamente");
+    }
 
-public List<Reporte> obtenerTodosLosReportes() {
-    return reporteRepositorio.findAll();
-}
+    public List<Reporte> obtenerTodosLosReportes() {
+        return reporteRepositorio.findAll();
+    }
 
-public ResponseEntity<?> obtenerReportePorId(String idReporte) {
-    try {
-        ObjectId objectId = new ObjectId(idReporte);
-        Optional<Reporte> reporte = reporteRepositorio.findById(objectId);
+    public ResponseEntity<?> obtenerReportePorId(String idReporte) {
+        try {
+            ObjectId objectId = new ObjectId(idReporte);
+            Optional<Reporte> reporte = reporteRepositorio.findById(objectId);
 
-        if (reporte.isPresent()) {
-            return ResponseEntity.ok(reporte.get());
-        } else {
+            if (reporte.isPresent()) {
+                return ResponseEntity.ok(reporte.get());
+            } else {
+                return ResponseEntity.badRequest()
+                        .body(new MensajeDTO<>(true, "Reporte no encontrado"));
+            }
+
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(new MensajeDTO<>(true, "Reporte no encontrado"));
+                    .body(new MensajeDTO<>(true, "ID de reporte inválido"));
         }
-
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest()
-                .body(new MensajeDTO<>(true, "ID de reporte inválido"));
     }
-}
 
-public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
-    try {
-        return reporteRepositorio.findByIdUsuario(new ObjectId(idUsuario));
-    } catch (IllegalArgumentException e) {
-        return List.of(); // Retorna una lista vacía si el ID es inválido
+    public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
+        try {
+            return reporteRepositorio.findByIdUsuario(new ObjectId(idUsuario));
+        } catch (IllegalArgumentException e) {
+            return List.of(); // Retorna una lista vacía si el ID es inválido
+        }
     }
-}
 
     public MensajeDTO<String> eliminarReporte(String id) {
         Optional<Reporte> optionalReporte = reporteRepositorio.findById(new ObjectId(id));
@@ -89,6 +89,5 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
             return new MensajeDTO<>(true, "No se encontró el reporte con el ID especificado");
         }
     }
-
 }
 
