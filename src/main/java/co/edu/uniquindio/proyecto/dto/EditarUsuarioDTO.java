@@ -14,6 +14,5 @@ public class EditarUsuarioDTO {
     private String telefono;
     private String direccion;
     private String ciudad;
-    private String email;
 
 }

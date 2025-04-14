@@ -65,6 +65,10 @@ public class AuthServicioImpl implements AuthServicio {
         usuario.setPassword(passwordEncoder.encode(request.getContrasena())); // Encriptar la contraseña
         usuario.setEstado(EstadoUsuario.INACTIVO); // Estado inicial: ACTIVO
         usuario.setRol(Rol.CLIENTE); // Rol por defecto: CLIENTE
+        usuario.setCiudad(request.getCiudad());
+        usuario.setNombre(request.getNombre());
+        usuario.setDireccion(request.getDireccion());
+        usuario.setTelefono(request.getTelefono());
 
         usuarioRepository.save(usuario);
         logger.info("Usuario registrado exitosamente: {}", request.getEmail());

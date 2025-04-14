@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.mapper;
+package co.edu.uniquindio.proyecto.mappers;
 
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;

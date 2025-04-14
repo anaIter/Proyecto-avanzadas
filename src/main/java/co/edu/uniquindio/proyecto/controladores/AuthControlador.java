@@ -25,7 +25,7 @@ public class AuthControlador {
     public ResponseEntity<MensajeDTO<String>> iniciarSesion(@Valid @RequestBody LoginDTO request) {
         try {
             String token = authService.login(request);
-            return ResponseEntity.ok(new MensajeDTO<>(false, "Inicio de sesión exitoso"+ token));
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Inicio de sesión exitoso,Token: "+ token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new MensajeDTO<>(true, "Error en inicio de sesión: " + e.getMessage()));
