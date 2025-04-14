@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailServicioImpl implements EmailServicio {
-    @Value("Smtp.gmail.com")
+    @Value("${spring.mail.host}")
     private String HOST;
 
-    @Value("587")
+    @Value("${spring.mail.port}")
     private int PUERTO;
 
-    @Value("emailservicio592@gmail.com")
+    @Value("${spring.mail.username}")
     private String USUARIO;
 
-    @Value("rjew pbdp egpu ymsp")
+    @Value("${spring.mail.password}")
     private String PASSWORD;
 
     @Override
@@ -40,6 +40,12 @@ public class EmailServicioImpl implements EmailServicio {
                 .buildMailer()) {
 
             mailer.sendMail(email);
+            System.out.println("Correo enviado correctamente");
+
+        } catch (Exception e) {
+            System.err.println("Error al enviar correo:");
+            e.printStackTrace();
         }
+
     }
 }
