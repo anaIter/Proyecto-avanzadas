@@ -5,13 +5,16 @@ import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.servicios.CloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.impl.ReporteServicioImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,6 +24,7 @@ import java.util.List;
 public class ReporteControlador {
 
     private final ReporteServicioImpl reporteServicio;
+    private final CloudinaryServicio cloudinaryService;
 
     @PostMapping
     @Operation(summary = "Crear un nuevo reporte")
@@ -29,7 +33,8 @@ public class ReporteControlador {
             @ApiResponse(responseCode = "400", description = "Datos inválidos para crear el reporte"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor al crear el reporte")
     })
-    public ResponseEntity<MensajeDTO<String>> crearReporte(@RequestBody CrearReporteDTO reporte) {
+    public ResponseEntity<MensajeDTO<String>> crearReporte(
+            @RequestBody CrearReporteDTO reporte) {
         try {
             MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte);
             return ResponseEntity.ok(respuesta);
@@ -61,7 +66,7 @@ public class ReporteControlador {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
 
-    public ResponseEntity<?> obtenerReportePorId(@PathVariable String id) {
+    public Reporte obtenerReportePorId(@PathVariable String id) {
         return reporteServicio.obtenerReportePorId(id);
     }
 

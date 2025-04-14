@@ -8,9 +8,9 @@ import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +27,7 @@ public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
     reporte.setDescripcion(dto.getDescripcion());
     reporte.getIdUsuario();
     reporte.setFechaCreacion(dto.getFechaCreacion());
+    reporte.setImagenes(new ArrayList<>());
 
     reporteRepositorio.save(reporte);
     return new MensajeDTO<>(false, "Reporte creado exitosamente");
@@ -36,21 +37,15 @@ public List<Reporte> obtenerTodosLosReportes() {
     return reporteRepositorio.findAll();
 }
 
-public ResponseEntity<?> obtenerReportePorId(String idReporte) {
+public Reporte obtenerReportePorId(String idReporte) {
     try {
         ObjectId objectId = new ObjectId(idReporte);
         Optional<Reporte> reporte = reporteRepositorio.findById(objectId);
 
-        if (reporte.isPresent()) {
-            return ResponseEntity.ok(reporte.get());
-        } else {
-            return ResponseEntity.badRequest()
-                    .body(new MensajeDTO<>(true, "Reporte no encontrado"));
-        }
+        return reporte.orElse(null);
 
     } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest()
-                .body(new MensajeDTO<>(true, "ID de reporte inválido"));
+        return null;
     }
 }
 
@@ -87,6 +82,20 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
             return new MensajeDTO<>(false, "Estado del reporte actualizado correctamente");
         } else {
             return new MensajeDTO<>(true, "No se encontró el reporte con el ID especificado");
+        }
+    }
+
+    @Override
+    public MensajeDTO<String> agregarImagenAReporte(String url, String id) {
+        Optional<Reporte> optionalReporte = reporteRepositorio.findById(new ObjectId(id));
+
+        if (optionalReporte.isPresent()) {
+            Reporte reporte = optionalReporte.get();
+            reporte.getImagenes().add(url);
+            reporteRepositorio.save(reporte);
+            return new MensajeDTO<>(false, "Agregada imagen correctamente");
+        } else {
+            return new MensajeDTO<>(true, "El reporte no existe");
         }
     }
 

@@ -13,7 +13,7 @@ public interface ReporteServicio {
 
     List<Reporte> obtenerTodosLosReportes();
 
-    ResponseEntity<?> obtenerReportePorId(String idReporte);
+    Reporte obtenerReportePorId(String idReporte);
 
     List<Reporte> obtenerReportesPorUsuario(String idUsuario);
 
@@ -21,4 +21,5 @@ public interface ReporteServicio {
 
     MensajeDTO<String> cambiarEstadoReporte(CambiarEstadoReporteDTO dto);
 
+    MensajeDTO<String> agregarImagenAReporte(String url, String id);
 }
