@@ -1,8 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
-import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
-import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
-import co.edu.uniquindio.proyecto.dto.MensajeDTO;
+import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
@@ -32,6 +30,37 @@ public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
     reporteRepositorio.save(reporte);
     return new MensajeDTO<>(false, "Reporte creado exitosamente");
 }
+    @Override
+    public MensajeDTO<String> editarReporte(EditarReporteDTO dto) throws Exception {
+        Optional<Reporte> optional = reporteRepositorio.findById(new ObjectId(dto.getId()));
+        if (optional.isEmpty()) {
+            throw new Exception("No se encontró el reporte con ID: " + dto.getId());
+        }
+
+        Reporte reporte = optional.get();
+        reporte.setTitulo(dto.getTitulo());
+        reporte.setDescripcion(dto.getDescripcion());
+        reporte.setCategoria(dto.getCategoria());
+        reporte.setEstado(dto.getEstado());
+
+        reporteRepositorio.save(reporte);
+        return new MensajeDTO<>(false, "Reporte actualizado correctamente");
+    }
+
+    @Override
+    public MensajeDTO<String> marcarComoImportante(MarcarImportanteDTO dto) throws Exception {
+        Optional<Reporte> optional = reporteRepositorio.findById(new ObjectId(dto.getIdReporte()));
+        if (optional.isEmpty()) {
+            throw new Exception("No se encontró el reporte");
+        }
+
+        Reporte reporte = optional.get();
+        reporte.setImportante(dto.isImportante());  // Asegúrate que el campo exista en la entidad
+
+        reporteRepositorio.save(reporte);
+        return new MensajeDTO<>(false, "Importancia del reporte actualizada");
+    }
+
 
 public List<Reporte> obtenerTodosLosReportes() {
     return reporteRepositorio.findAll();

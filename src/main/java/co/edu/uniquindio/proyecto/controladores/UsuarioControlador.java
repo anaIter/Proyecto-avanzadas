@@ -48,6 +48,19 @@ public class UsuarioControlador {
         }
     }
 
+    @PutMapping("/{id}/cambiar-contrasena")
+    public ResponseEntity<MensajeDTO<String>> cambiarContrasena(@PathVariable String id,
+                                                                @RequestBody @Valid CambiarContrasenaDTO dto) {
+        try {
+            usuarioServicio.cambiarContrasena(id, dto);
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Contraseña actualizada correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MensajeDTO<>(true, e.getMessage()));
+        }
+    }
+
+
     /**
      * Eliminación (desactivación) de cuenta de usuario
      */

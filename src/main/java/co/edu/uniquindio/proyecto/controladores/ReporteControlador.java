@@ -1,9 +1,7 @@
 package co.edu.uniquindio.proyecto.controladores;
 
 
-import co.edu.uniquindio.proyecto.dto.CambiarEstadoReporteDTO;
-import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
-import co.edu.uniquindio.proyecto.dto.MensajeDTO;
+import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
 import co.edu.uniquindio.proyecto.servicios.CloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.impl.ReporteServicioImpl;
@@ -11,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +43,40 @@ public class ReporteControlador {
         }
     }
 
+    @PutMapping("/editar")
+    @Operation(summary = "Editar un reporte existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reporte actualizado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Reporte no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<MensajeDTO<String>> editarReporte(@RequestBody EditarReporteDTO dto) {
+        try {
+            MensajeDTO<String> respuesta = reporteServicio.editarReporte(dto);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MensajeDTO<>(true, "Error al editar el reporte: " + e.getMessage()));
+        }
+    }
+
+
+    @PutMapping("/marcar-importante")
+    @Operation(summary = "Marcar un reporte como importante")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estado de importancia actualizado"),
+            @ApiResponse(responseCode = "404", description = "Reporte no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<MensajeDTO<String>> marcarComoImportante(@RequestBody MarcarImportanteDTO dto) {
+        try {
+            MensajeDTO<String> respuesta = reporteServicio.marcarComoImportante(dto);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MensajeDTO<>(true, "Error al actualizar importancia: " + e.getMessage()));
+        }
+    }
 
     // Obtener todos los reportes
     @GetMapping

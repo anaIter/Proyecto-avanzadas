@@ -1,9 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
-import co.edu.uniquindio.proyecto.dto.ActivarCuentaDTO;
-import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
-import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
-import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
+import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.CodigoValidacion;
 import co.edu.uniquindio.proyecto.entidad.Usuario;
 import co.edu.uniquindio.proyecto.Enum.EstadoUsuario;
@@ -47,6 +44,20 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         usuarioRepositorio.save(usuario);
         logger.info("Usuario creado: {}", usuario.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public void cambiarContrasena(String id, CambiarContrasenaDTO dto) throws Exception {
+        Usuario usuario = usuarioRepositorio.findById(id)
+                .orElseThrow(() -> new Exception("El usuario no existe"));
+
+        if (!passwordEncoder.matches(dto.getContrasenaActual(), usuario.getPassword())) {
+            throw new Exception("La contraseña actual no es correcta");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(dto.getNuevaContrasena()));
+        usuarioRepositorio.save(usuario);
     }
 
     @Override

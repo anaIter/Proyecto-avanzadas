@@ -29,4 +29,6 @@ public class Reporte {
     private List<String> imagenes;
     private boolean eliminado;
     private ObjectId idUsuario; // Referencia al usuario creador
+    private boolean importante;
+
 }

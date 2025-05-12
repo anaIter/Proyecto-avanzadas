@@ -8,7 +8,7 @@ import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import java.util.List;
 
 public interface ComentarioServicio {
-    MensajeDTO<String> crearComentario(ComentarioDTO comentarioDTO);
+    MensajeDTO<String> crearComentario(ComentarioDTO dto);
     List<ComentarioRespuestaDTO> obtenerComentariosPorReporte(String idReporte);
 }
 

@@ -6,24 +6,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-
 @Document(collection = "comentarios")
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Comentario {
-
     @Id
     private ObjectId id;
-
-    private ObjectId idReporte;
-
-    private ObjectId idUsuario;
-
     private String contenido;
-
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fecha;
+    private ObjectId idUsuario;
+    private ObjectId idReporte;
 }
 
