@@ -35,13 +35,15 @@ public class ReporteControlador {
     public ResponseEntity<MensajeDTO<String>> crearReporte(
             @RequestBody CrearReporteDTO reporte) {
         try {
-            MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte);
+            String idUsuario = "id-del-usuario-aqui"; // TODO: obtener de sesión o petición
+            MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte, idUsuario);
             return ResponseEntity.ok(respuesta);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(new MensajeDTO<>(true, "Error al crear el reporte: " + e.getMessage()));
         }
     }
+
 
     @PutMapping("/editar")
     @Operation(summary = "Editar un reporte existente")

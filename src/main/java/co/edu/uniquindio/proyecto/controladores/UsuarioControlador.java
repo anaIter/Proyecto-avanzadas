@@ -48,11 +48,11 @@ public class UsuarioControlador {
         }
     }
 
-    @PutMapping("/{id}/cambiar-contrasena")
-    public ResponseEntity<MensajeDTO<String>> cambiarContrasena(@PathVariable String id,
+    @PutMapping("/{email}/cambiar-contrasena")
+    public ResponseEntity<MensajeDTO<String>> cambiarContrasena(@PathVariable String email,
                                                                 @RequestBody @Valid CambiarContrasenaDTO dto) {
         try {
-            usuarioServicio.cambiarContrasena(id, dto);
+            usuarioServicio.cambiarContrasena(email, dto);
             return ResponseEntity.ok(new MensajeDTO<>(false, "Contraseña actualizada correctamente"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
