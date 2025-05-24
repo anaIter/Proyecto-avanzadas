@@ -37,10 +37,10 @@ public class UsuarioControlador {
      * Edición de datos del usuario
      */
     @PutMapping("/{id}")
-    public ResponseEntity<MensajeDTO<String>> editarUsuario(@PathVariable String id,
+    public ResponseEntity<MensajeDTO<String>> editarUsuario(@PathVariable String email,
                                                             @Valid @RequestBody EditarUsuarioDTO usuarioDTO) {
         try {
-            usuarioServicio.editar(id,usuarioDTO);
+            usuarioServicio.editar(email,usuarioDTO);
             return ResponseEntity.ok(new MensajeDTO<>(false, "Datos actualizados correctamente"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

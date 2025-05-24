@@ -62,8 +62,8 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     @Transactional
-    public void editar(String id,EditarUsuarioDTO dto) throws Exception {
-        Optional<Usuario> usuarioOpt = usuarioRepositorio.findById(id);
+    public void editar(String email,EditarUsuarioDTO dto) throws Exception {
+        Optional<Usuario> usuarioOpt = usuarioRepositorio.findByEmail(email);
 
         if (usuarioOpt.isEmpty()) {
             throw new Exception("El usuario no existe");
