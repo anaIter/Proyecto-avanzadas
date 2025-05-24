@@ -36,7 +36,7 @@ public class UsuarioControlador {
     /**
      * Edición de datos del usuario
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{email}")
     public ResponseEntity<MensajeDTO<String>> editarUsuario(@PathVariable String email,
                                                             @Valid @RequestBody EditarUsuarioDTO usuarioDTO) {
         try {
