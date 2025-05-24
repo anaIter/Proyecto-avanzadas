@@ -22,11 +22,12 @@ public class ReporteServicioImpl implements ReporteServicio {
 private final ReporteRepositorio reporteRepositorio;
 private final HistorialEstadoReporteRepositorio historialEstadoRepo;
 
+
+
 public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
     Reporte reporte = new Reporte();
     reporte.setTitulo(dto.getTitulo());
     reporte.setDescripcion(dto.getDescripcion());
-    reporte.getIdUsuario();
     reporte.setFechaCreacion(dto.getFechaCreacion());
     reporte.setImagenes(new ArrayList<>());
 
@@ -132,6 +133,7 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
         }
     }
 
+
     @Override
     public MensajeDTO<String> agregarImagenAReporte(String url, String id) {
         Optional<Reporte> optionalReporte = reporteRepositorio.findById(new ObjectId(id));
@@ -145,5 +147,6 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
             return new MensajeDTO<>(true, "El reporte no existe");
         }
     }
+
 }
 
