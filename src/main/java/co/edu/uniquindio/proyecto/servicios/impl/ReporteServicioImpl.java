@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.HistorialEstadoReporte;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.mappers.UbicacionMapper;
 import co.edu.uniquindio.proyecto.repositorios.HistorialEstadoReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
@@ -23,17 +24,21 @@ private final ReporteRepositorio reporteRepositorio;
 private final HistorialEstadoReporteRepositorio historialEstadoRepo;
 
 
+    public MensajeDTO<String>crearReporte(CrearReporteDTO dto, String idUsuario) {
+        Reporte reporte = new Reporte();
+        reporte.setTitulo(dto.getTitulo());
+        reporte.setDescripcion(dto.getDescripcion());
+        reporte.setUbicacion(UbicacionMapper.dtoToEntidad(dto.getUbicacion())); // ✅
+        reporte.setEstado(dto.getEstadoReporte().name()); // ✅ o usa directamente el enum si aplica
+        reporte.setCategoria(dto.getCategoria());
+        reporte.setFechaCreacion(dto.getFechaCreacion() != null ? dto.getFechaCreacion() : LocalDateTime.now());
+        reporte.setImagenes(dto.getImagenes());
+        reporte.setIdUsuario(new ObjectId(idUsuario)); // ✅
 
-public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
-    Reporte reporte = new Reporte();
-    reporte.setTitulo(dto.getTitulo());
-    reporte.setDescripcion(dto.getDescripcion());
-    reporte.setFechaCreacion(dto.getFechaCreacion());
-    reporte.setImagenes(new ArrayList<>());
+        reporteRepositorio.save(reporte);
+        return new MensajeDTO<>(false, "Reporte creado exitosamente");
+    }
 
-    reporteRepositorio.save(reporte);
-    return new MensajeDTO<>(false, "Reporte creado exitosamente");
-}
     @Override
     public MensajeDTO<String> editarReporte(EditarReporteDTO dto) throws Exception {
         Optional<Reporte> optional = reporteRepositorio.findById(new ObjectId(dto.getId()));
