@@ -1,13 +1,16 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.entidad.HistorialEstadoReporte;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.repositorios.HistorialEstadoReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +20,7 @@ import java.util.Optional;
 public class ReporteServicioImpl implements ReporteServicio {
 
 private final ReporteRepositorio reporteRepositorio;
-
+private final HistorialEstadoReporteRepositorio historialEstadoRepo;
 
 public MensajeDTO<String> crearReporte(CrearReporteDTO dto) {
     Reporte reporte = new Reporte();
@@ -99,16 +102,31 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
         }
     }
 
-
     @Override
     public MensajeDTO<String> cambiarEstadoReporte(CambiarEstadoReporteDTO dto) {
         Optional<Reporte> opcional = reporteRepositorio.findById(new ObjectId(dto.getIdReporte()));
 
         if (opcional.isPresent()) {
             Reporte reporte = opcional.get();
-            reporte.setEstado(dto.getNuevoEstado());
+            String estadoAnterior = reporte.getEstado();
+            String nuevoEstado = dto.getNuevoEstado();
+
+            // Cambiar el estado
+            reporte.setEstado(nuevoEstado);
             reporteRepositorio.save(reporte);
-            return new MensajeDTO<>(false, "Estado del reporte actualizado correctamente");
+
+            // Guardar en historial
+            HistorialEstadoReporte historial = HistorialEstadoReporte.builder()
+                    .idReporte(reporte.getId())
+                    .estadoAnterior(estadoAnterior)
+                    .estadoNuevo(nuevoEstado)
+                    .fechaCambio(LocalDateTime.now())
+                    .observacion("Cambio realizado automáticamente")
+                    .build();
+
+            historialEstadoRepo.save(historial);
+
+            return new MensajeDTO<>(false, "Estado del reporte actualizado y registrado en historial.");
         } else {
             return new MensajeDTO<>(true, "No se encontró el reporte con el ID especificado");
         }
@@ -127,6 +145,5 @@ public List<Reporte> obtenerReportesPorUsuario(String idUsuario) {
             return new MensajeDTO<>(true, "El reporte no existe");
         }
     }
-
 }
 
