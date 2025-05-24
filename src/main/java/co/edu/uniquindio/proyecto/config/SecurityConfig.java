@@ -55,14 +55,13 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/register",
                                 "/api/usuarios/activar",
+                                "/codigo-validacion/generar",
                                 "/error",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/codigo-validacion/generar",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        .requestMatchers("/api/admin/*","/api/informes/*", "/api/admin/categorias", "api/admin/categorias/*", "/api/reportes/cambiar-estado").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/api/reportes/*","/api/reportes").hasRole("CLIENTE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
             }
         }
 
-        return new MensajeDTO<>(false, "Código generado y enviado: " + codigo.getCodigo());
+        return new MensajeDTO<>(false, codigo.getCodigo());
     }
 
 

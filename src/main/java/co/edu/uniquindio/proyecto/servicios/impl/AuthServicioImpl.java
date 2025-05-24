@@ -9,11 +9,11 @@ import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.config.JwtService;
 import co.edu.uniquindio.proyecto.servicios.AuthServicio;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -53,8 +53,7 @@ public class AuthServicioImpl implements AuthServicio {
     }
 
     @Override
-    @Transactional
-    public void register(RegistroDTO request) {
+    public ObjectId register(RegistroDTO request) {
         if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
             logger.warn("Intento de registro fallido: email ya registrado ({})", request.getEmail());
             throw new RuntimeException("El email ya está registrado");
@@ -71,6 +70,11 @@ public class AuthServicioImpl implements AuthServicio {
         usuario.setTelefono(request.getTelefono());
 
         usuarioRepository.save(usuario);
-        logger.info("Usuario registrado exitosamente: {}", request.getEmail());
+        usuario = usuarioRepository.findByEmail(request.getEmail()).get();
+
+
+        logger.info("Usuario registrado exitosamente: {}", usuario.getId());
+
+        return usuario.getId();
     }
 }

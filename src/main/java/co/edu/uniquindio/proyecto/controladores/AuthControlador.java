@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.dto.RegistroDTO;
 import co.edu.uniquindio.proyecto.servicios.AuthServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class AuthControlador {
     public ResponseEntity<MensajeDTO<String>> iniciarSesion(@Valid @RequestBody LoginDTO request) {
         try {
             String token = authService.login(request);
-            return ResponseEntity.ok(new MensajeDTO<>(false, "Inicio de sesión exitoso,Token: "+ token));
+            return ResponseEntity.ok(new MensajeDTO<>(false, token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new MensajeDTO<>(true, "Error en inicio de sesión: " + e.getMessage()));
@@ -38,9 +39,9 @@ public class AuthControlador {
     @PostMapping("/register")
     public ResponseEntity<MensajeDTO<String>> registrarSesion(@Valid @RequestBody RegistroDTO request) {
         try {
-            authService.register(request);
+            ObjectId id = authService.register(request);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new MensajeDTO<>(false, "Registro exitoso"));
+                    .body(new MensajeDTO<>(false, id.toString()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MensajeDTO<>(true, "Error en registro: " + e.getMessage()));
