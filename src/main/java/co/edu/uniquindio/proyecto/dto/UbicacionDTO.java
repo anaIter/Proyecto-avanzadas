@@ -1,18 +1,16 @@
 package co.edu.uniquindio.proyecto.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UbicacionDTO {
-
-    private String latitud;
-    private String longitud;
+    private double latitud;
+    private double longitud;
     private String direccion;
 }

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ReporteServicio {
-    MensajeDTO<String> crearReporte(CrearReporteDTO dto);
+    public MensajeDTO<String> crearReporte(CrearReporteDTO dto, String idUsuario);
 
     MensajeDTO<String> editarReporte(EditarReporteDTO dto) throws Exception;
 

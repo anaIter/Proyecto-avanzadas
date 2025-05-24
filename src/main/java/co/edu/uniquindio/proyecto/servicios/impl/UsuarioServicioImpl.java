@@ -48,8 +48,8 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     @Transactional
-    public void cambiarContrasena(String id, CambiarContrasenaDTO dto) throws Exception {
-        Usuario usuario = usuarioRepositorio.findById(id)
+    public void cambiarContrasena(String email, CambiarContrasenaDTO dto) throws Exception {
+        Usuario usuario = usuarioRepositorio.findByEmail(email)
                 .orElseThrow(() -> new Exception("El usuario no existe"));
 
         if (!passwordEncoder.matches(dto.getContrasenaActual(), usuario.getPassword())) {
