@@ -16,4 +16,7 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
     List<Reporte> findByTituloContainingIgnoreCase(String titulo);
 
     Optional<Reporte> findById(ObjectId Id);
+
+    Reporte findFirstByOrderByFechaCreacionDesc();
+
 }

@@ -90,6 +90,18 @@ public class UsuarioControlador {
         }
     }
 
+    @GetMapping("/id/x{email}")
+    public ResponseEntity<MensajeDTO<String>> obtenerUsuarioId(@PathVariable String email) {
+        try {
+            String id = usuarioServicio.obtenerId(email);
+            return ResponseEntity.ok(new MensajeDTO<>(false, id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MensajeDTO<String>(true, ""));
+
+        }
+    }
+
     /**
      * Listado de usuarios filtrado por nombre y ciudad
      */

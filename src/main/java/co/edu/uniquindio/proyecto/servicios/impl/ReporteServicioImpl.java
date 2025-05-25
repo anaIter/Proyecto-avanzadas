@@ -3,9 +3,11 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.HistorialEstadoReporte;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.entidad.Usuario;
 import co.edu.uniquindio.proyecto.mappers.UbicacionMapper;
 import co.edu.uniquindio.proyecto.repositorios.HistorialEstadoReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
+import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -22,21 +24,26 @@ public class ReporteServicioImpl implements ReporteServicio {
 
 private final ReporteRepositorio reporteRepositorio;
 private final HistorialEstadoReporteRepositorio historialEstadoRepo;
+    private final UsuarioRepositorio usuarioRepositorio;
 
 
-    public MensajeDTO<String>crearReporte(CrearReporteDTO dto, String idUsuario) {
+    public MensajeDTO<String>crearReporte(CrearReporteDTO dto, String email) {
+        Usuario usuario =usuarioRepositorio.findByEmail(email).get();
+        ObjectId idUsuario = usuario.getId();
+
         Reporte reporte = new Reporte();
         reporte.setTitulo(dto.getTitulo());
         reporte.setDescripcion(dto.getDescripcion());
         reporte.setUbicacion(UbicacionMapper.dtoToEntidad(dto.getUbicacion())); // ✅
         reporte.setEstado(dto.getEstadoReporte().name()); // ✅ o usa directamente el enum si aplica
         reporte.setCategoria(dto.getCategoria());
-        reporte.setFechaCreacion(dto.getFechaCreacion() != null ? dto.getFechaCreacion() : LocalDateTime.now());
+        reporte.setFechaCreacion(LocalDateTime.now());
         reporte.setImagenes(dto.getImagenes());
-        reporte.setIdUsuario(new ObjectId(idUsuario)); // ✅
+        reporte.setIdUsuario(idUsuario); // ✅
 
         reporteRepositorio.save(reporte);
-        return new MensajeDTO<>(false, "Reporte creado exitosamente");
+        reporte = reporteRepositorio.findFirstByOrderByFechaCreacionDesc();
+        return new MensajeDTO<>(false, reporte.getId().toString());
     }
 
     @Override

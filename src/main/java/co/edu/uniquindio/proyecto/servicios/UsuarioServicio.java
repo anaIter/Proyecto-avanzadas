@@ -13,6 +13,9 @@ public interface UsuarioServicio {
     void editar(String id,EditarUsuarioDTO dto) throws Exception;
     void eliminar(String id) throws Exception;
     UsuarioDTO obtener(String email) throws Exception;
+
+    String obtenerId(String email) throws Exception;
+
     List<UsuarioDTO> listarTodos(String nombre, String ciudad);
     void activarCuenta(ActivarCuentaDTO dto) throws Exception;
 }

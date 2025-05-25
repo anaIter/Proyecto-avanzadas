@@ -109,6 +109,18 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     }
 
     @Override
+    public String obtenerId(String email) throws Exception {
+        Usuario usuario = usuarioRepositorio.findByEmail(email)
+                .orElseThrow(() -> new Exception("El usuario no existe"));
+
+        if (usuario.getEstado() == EstadoUsuario.ELIMINADO) {
+            throw new Exception("El usuario ha sido eliminado");
+        }
+
+        return usuario.getId().toString();
+    }
+
+    @Override
     public List<UsuarioDTO> listarTodos(String nombre, String ciudad) {
         return usuarioRepositorio.findAll().stream()
                 .filter(usuario -> usuario.getEstado() != EstadoUsuario.ELIMINADO) // No incluir eliminados

@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.entidad.Reporte;
+import co.edu.uniquindio.proyecto.mappers.ReporteMapper;
 import co.edu.uniquindio.proyecto.servicios.CloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.impl.ReporteServicioImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,18 +26,18 @@ public class ReporteControlador {
     private final ReporteServicioImpl reporteServicio;
     private final CloudinaryServicio cloudinaryService;
 
-    @PostMapping
+    @PostMapping("/{email}")
     @Operation(summary = "Crear un nuevo reporte")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reporte creado exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos para crear el reporte"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor al crear el reporte")
     })
-    public ResponseEntity<MensajeDTO<String>> crearReporte(
+    public ResponseEntity<MensajeDTO<String>> crearReporte(@PathVariable String email,
             @RequestBody CrearReporteDTO reporte) {
         try {
-            String idUsuario = "id-del-usuario-aqui"; // TODO: obtener de sesión o petición
-            MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte, idUsuario);
+            // TODO: obtener de sesión o petición
+            MensajeDTO<String> respuesta = reporteServicio.crearReporte(reporte, email);
             return ResponseEntity.ok(respuesta);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
@@ -80,17 +81,18 @@ public class ReporteControlador {
         }
     }
 
-    // Obtener todos los reportes
     @GetMapping
     @Operation(summary = "Obtener todos los reportes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reportes obtenidos exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<List<Reporte>> obtenerTodosLosReportes() {
+    public ResponseEntity<List<ReporteSalidaDTO>> obtenerTodosLosReportes() {
         List<Reporte> reportes = reporteServicio.obtenerTodosLosReportes();
-        return ResponseEntity.ok(reportes);
+        List<ReporteSalidaDTO> reportesDTO = ReporteMapper.convertirListaADTO(reportes);
+        return ResponseEntity.ok(reportesDTO);
     }
+
 
     // Obtener un reporte por su ID
     @GetMapping("/{id}")
