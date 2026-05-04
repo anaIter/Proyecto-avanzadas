@@ -21,5 +21,7 @@ public class ReporteSalidaDTO {
     private List<String> imagenes;
     private boolean eliminado;
     private String idUsuario;
+    private String nombreUsuario; // ← NUEVO
     private boolean importante;
+    private int seguidores;
 }

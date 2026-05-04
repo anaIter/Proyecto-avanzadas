@@ -24,4 +24,6 @@ public interface ReporteServicio {
     MensajeDTO<String> cambiarEstadoReporte(CambiarEstadoReporteDTO dto);
 
     MensajeDTO<String> agregarImagenAReporte(String url, String id);
+
+    MensajeDTO<String> seguirReporte(String idReporte, String idUsuario);
 }

@@ -62,7 +62,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     @Transactional
-    public void editar(String email,EditarUsuarioDTO dto) throws Exception {
+    public void editar(String email, EditarUsuarioDTO dto) throws Exception {
         Optional<Usuario> usuarioOpt = usuarioRepositorio.findByEmail(email);
 
         if (usuarioOpt.isEmpty()) {
@@ -73,6 +73,11 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         if (usuario.getEstado() == EstadoUsuario.ELIMINADO) {
             throw new Exception("No se puede editar un usuario eliminado");
+        }
+
+        // Mantener ciudad actual si no se seleccionó una nueva
+        if (dto.getCiudad() == null || dto.getCiudad().isEmpty()) {
+            dto.setCiudad(usuario.getCiudad().name());
         }
 
         UsuarioMapper.actualizarUsuario(usuario, dto);
@@ -161,4 +166,27 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         usuarioRepositorio.save(usuario);
         logger.info("Cuenta activada para el usuario: {}", usuario.getEmail());
     }
+
+    @Override
+    @Transactional
+    public void recuperarContrasena(RecuperarContrasenaDTO dto) throws Exception {
+        Usuario usuario = usuarioRepositorio.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new Exception("El usuario con ese email no existe"));
+
+        CodigoValidacion codigoValidacion = codigoValidacionRepositorio
+                .findTopByIdUsuarioOrderByFechaCreacionDesc(usuario.getId());
+
+        if (codigoValidacion == null || !codigoValidacion.getCodigo().equals(dto.getCodigoVerificacion())) {
+            throw new Exception("El código de verificación es incorrecto");
+        }
+
+        if (!codigoValidacion.estaVigente()) {
+            throw new Exception("El código ha expirado, solicita uno nuevo");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(dto.getNuevaContrasena()));
+        usuarioRepositorio.save(usuario);
+        logger.info("Contraseña recuperada para el usuario: {}", usuario.getEmail());
+    }
+
 }

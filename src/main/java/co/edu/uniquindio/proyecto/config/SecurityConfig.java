@@ -55,11 +55,12 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/register",
                                 "/api/usuarios/activar",
+                                "/api/usuarios/id/**",              // ← NUEVO: obtener ID sin token
+                                "/api/usuarios/recuperar-contrasena", // ← NUEVO: recuperar contraseña sin token
                                 "/codigo-validacion/generar",
                                 "/error",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/codigo-validacion/generar",
                                 "/v3/api-docs/**"
                         ).permitAll()
                         .anyRequest().authenticated()
@@ -72,7 +73,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "http://149.50.142.146:5173"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://149.50.142.146:5173",
+                "http://reportes-frontend.s3-website-us-east-1.amazonaws.com",
+                "https://d2wpeizwrm0uic.cloudfront.net",
+                "https://d36ru3xrssvzwk.cloudfront.net"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
@@ -113,27 +121,22 @@ public class SecurityConfig {
             try {
                 SignedJWT signedJWT = SignedJWT.parse(token);
 
-                // Verificación de firma
                 if (!signedJWT.verify(new com.nimbusds.jose.crypto.MACVerifier(SECRET_KEY.getBytes()))) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no válido");
                     return;
                 }
 
-                // Verificar expiración
                 Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
                 if (expirationTime.before(new Date())) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                     return;
                 }
 
-                // Extraer info del token
                 String email = jwtService.extractEmail(token);
                 String rol = jwtService.extractRol(token);
 
-                // Crear UserDetails con autoridad del rol
                 UserDetails userDetails = new User(email, "", List.of(new SimpleGrantedAuthority("ROLE_" + rol)));
 
-                // Guardar en contexto de seguridad
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

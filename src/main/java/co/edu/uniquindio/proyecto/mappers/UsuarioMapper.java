@@ -56,7 +56,14 @@ public class UsuarioMapper {
         usuario.setNombre(dto.getNombre());
         usuario.setTelefono(dto.getTelefono());
         usuario.setDireccion(dto.getDireccion());
-        usuario.setCiudad(Ciudad.valueOf(dto.getCiudad().toUpperCase())); // Convertir string a enum
+        if (dto.getCiudad() != null && !dto.getCiudad().isEmpty()) {
+            try {
+                usuario.setCiudad(Ciudad.valueOf(dto.getCiudad().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                // Si el valor no es válido, no se actualiza la ciudad
+            }
+        }
     }
+
 }
 

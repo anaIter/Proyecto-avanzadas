@@ -18,5 +18,6 @@ public interface UsuarioServicio {
 
     List<UsuarioDTO> listarTodos(String nombre, String ciudad);
     void activarCuenta(ActivarCuentaDTO dto) throws Exception;
+    void recuperarContrasena(RecuperarContrasenaDTO dto) throws Exception;
 }
 

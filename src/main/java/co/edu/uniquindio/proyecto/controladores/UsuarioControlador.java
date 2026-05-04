@@ -40,7 +40,7 @@ public class UsuarioControlador {
     public ResponseEntity<MensajeDTO<String>> editarUsuario(@PathVariable String email,
                                                             @Valid @RequestBody EditarUsuarioDTO usuarioDTO) {
         try {
-            usuarioServicio.editar(email,usuarioDTO);
+            usuarioServicio.editar(email, usuarioDTO);
             return ResponseEntity.ok(new MensajeDTO<>(false, "Datos actualizados correctamente"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -60,7 +60,6 @@ public class UsuarioControlador {
         }
     }
 
-
     /**
      * Eliminación (desactivación) de cuenta de usuario
      */
@@ -76,7 +75,7 @@ public class UsuarioControlador {
     }
 
     /**
-     * Obtención de un usuario por ID
+     * Obtención de un usuario por email
      */
     @GetMapping("/{email}")
     public ResponseEntity<MensajeDTO<UsuarioDTO>> obtenerUsuario(@PathVariable String email) {
@@ -86,11 +85,13 @@ public class UsuarioControlador {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new MensajeDTO<UsuarioDTO>(true, null));
-
         }
     }
 
-    @GetMapping("/id/x{email}")
+    /**
+     * Obtención del ID de un usuario por email
+     */
+    @GetMapping("/id/{email}")
     public ResponseEntity<MensajeDTO<String>> obtenerUsuarioId(@PathVariable String email) {
         try {
             String id = usuarioServicio.obtenerId(email);
@@ -98,7 +99,6 @@ public class UsuarioControlador {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new MensajeDTO<String>(true, ""));
-
         }
     }
 
@@ -111,5 +111,16 @@ public class UsuarioControlador {
             @RequestParam(required = false) String ciudad) {
         List<UsuarioDTO> usuarios = usuarioServicio.listarTodos(nombre, ciudad);
         return ResponseEntity.ok(new MensajeDTO<>(false, usuarios));
+    }
+
+    @PutMapping("/recuperar-contrasena")
+    public ResponseEntity<MensajeDTO<String>> recuperarContrasena(@RequestBody @Valid RecuperarContrasenaDTO dto) {
+        try {
+            usuarioServicio.recuperarContrasena(dto);
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Contraseña actualizada correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MensajeDTO<>(true, e.getMessage()));
+        }
     }
 }

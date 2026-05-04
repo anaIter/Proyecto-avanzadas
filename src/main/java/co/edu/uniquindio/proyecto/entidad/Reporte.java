@@ -30,5 +30,7 @@ public class Reporte {
     private boolean eliminado;
     private ObjectId idUsuario; // Referencia al usuario creador
     private boolean importante;
+    private String nivelImpacto;
+    private List<ObjectId> seguidores; // IDs de usuarios que siguen el reporte
 
 }

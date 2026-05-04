@@ -18,5 +18,6 @@ public class CambiarEstadoReporteDTO {
     @NotBlank(message = "El nuevo estado es obligatorio")
     private String nuevoEstado;
 
+    private String nivelImpacto;
 }
 
