@@ -9,6 +9,7 @@ import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import co.edu.uniquindio.proyecto.mappers.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Override
     @Transactional
     public void eliminar(String id) throws Exception {
-        Optional<Usuario> usuarioOpt = usuarioRepositorio.findById(id);
+        Optional<Usuario> usuarioOpt = usuarioRepositorio.findById(new ObjectId(id));
 
         if (usuarioOpt.isEmpty()) {
             throw new Exception("El usuario no existe");

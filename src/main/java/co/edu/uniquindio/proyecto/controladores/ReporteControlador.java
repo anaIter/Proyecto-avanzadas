@@ -85,9 +85,18 @@ public class ReporteControlador {
      * conflicto de rutas donde Spring interpretaba "usuario" como un ID.
      */
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<Reporte>> obtenerReportesPorUsuario(@PathVariable String idUsuario) {
+    public ResponseEntity<List<ReporteSalidaDTO>> obtenerReportesPorUsuario(@PathVariable String idUsuario) {
         List<Reporte> reportes = reporteServicio.obtenerReportesPorUsuario(idUsuario);
-        return ResponseEntity.ok(reportes);
+        List<ReporteSalidaDTO> reportesDTO = reportes.stream()
+                .map(r -> {
+                    String nombre = usuarioRepositorio
+                            .findById(r.getIdUsuario())
+                            .map(u -> u.getNombre())
+                            .orElse("Desconocido");
+                    return ReporteMapper.convertirADTO(r, nombre);
+                })
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(reportesDTO);
     }
 
 
@@ -99,7 +108,8 @@ public class ReporteControlador {
         List<ReporteSalidaDTO> reportesDTO = reportes.stream()
                 .filter(r -> "PENDIENTE".equalsIgnoreCase(r.getEstado()) && !r.isEliminado())
                 .map(r -> {
-                    String nombre = usuarioRepositorio.findById(r.getIdUsuario().toString())
+                    String nombre = usuarioRepositorio.findById(r.getIdUsuario())
+
                             .map(u -> u.getNombre())
                             .orElse("Usuario desconocido");
                     return ReporteMapper.convertirADTO(r, nombre);
@@ -123,7 +133,7 @@ public class ReporteControlador {
         List<ReporteSalidaDTO> reportesDTO = reportes.stream()
                 .filter(r -> "VERIFICADO".equalsIgnoreCase(r.getEstado()) && !r.isEliminado())
                 .map(r -> {
-                    String nombre = usuarioRepositorio.findById(r.getIdUsuario().toString())
+                    String nombre = usuarioRepositorio.findById(r.getIdUsuario())
                             .map(u -> u.getNombre())
                             .orElse("Usuario desconocido");
                     return ReporteMapper.convertirADTO(r, nombre);

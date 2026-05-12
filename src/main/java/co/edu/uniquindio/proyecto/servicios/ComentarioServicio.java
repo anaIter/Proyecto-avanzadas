@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ComentarioServicio {
     MensajeDTO<String> crearComentario(ComentarioDTO dto);
+
     List<ComentarioRespuestaDTO> obtenerComentariosPorReporte(String idReporte);
 }
 

@@ -13,4 +13,6 @@ public class ComentarioRespuestaDTO {
     private String contenido;
     private LocalDateTime fecha;
     private String idUsuario;
+    private String nombreUsuario;
+
 }

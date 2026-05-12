@@ -23,14 +23,18 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 }*/
 
+// UsuarioRepositorio.java
 import co.edu.uniquindio.proyecto.entidad.Usuario;
-//import org.springframework.data.jpa.repository.JpaRepository;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.Optional;
 
-public interface UsuarioRepositorio extends MongoRepository<Usuario, String> {
+public interface UsuarioRepositorio extends MongoRepository<Usuario, ObjectId> {
+    // En UsuarioRepositorio.java, agrega:
+    @Query("{ '_id': { $oid: ?0 } }")
+    Optional<Usuario> findByObjectIdHex(String hexId);
     Optional<Usuario> findByEmail(String email);
     Optional<Usuario> findByNombre(String nombre);
 }

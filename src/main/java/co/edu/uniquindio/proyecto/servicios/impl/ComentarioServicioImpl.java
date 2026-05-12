@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyecto.dto.ComentarioRespuestaDTO;
 import co.edu.uniquindio.proyecto.dto.EmailDTO;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.entidad.Comentario;
+import co.edu.uniquindio.proyecto.entidad.Usuario;
 import co.edu.uniquindio.proyecto.repositorios.ComentarioRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
@@ -42,7 +44,7 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         reporteRepositorio.findById(new ObjectId(dto.getIdReporte())).ifPresent(reporte -> {
             ObjectId idAutorReporte = reporte.getIdUsuario();
 
-            usuarioRepositorio.findById(idAutorReporte.toHexString()).ifPresent(autor -> {
+            usuarioRepositorio.findById(idAutorReporte).ifPresent(autor -> {
                 EmailDTO email = EmailDTO.builder()
                         .destinatario(autor.getEmail())
                         .asunto("Nuevo comentario en tu reporte")
@@ -68,13 +70,48 @@ public class ComentarioServicioImpl implements ComentarioServicio {
     @Override
     public List<ComentarioRespuestaDTO> obtenerComentariosPorReporte(String idReporte) {
         List<Comentario> comentarios = comentarioRepositorio.findByIdReporte(new ObjectId(idReporte));
-        return comentarios.stream().map(c ->
-                ComentarioRespuestaDTO.builder()
-                        .id(c.getId().toHexString())
-                        .contenido(c.getContenido())
-                        .fecha(c.getFecha())
-                        .idUsuario(c.getIdUsuario().toHexString())
-                        .build()
-        ).toList();
+
+        return comentarios.stream().map(c -> {
+            ObjectId userId = c.getIdUsuario();
+            System.out.println("🔍 Buscando usuario con ObjectId: " + userId);
+
+            Optional<Usuario> usuarioOpt = usuarioRepositorio.findById(userId);
+            System.out.println("🔍 Usuario encontrado: " + usuarioOpt.isPresent());
+            usuarioOpt.ifPresent(u -> System.out.println("🔍 Nombre: " + u.getNombre()));
+
+            String nombreUsuario = usuarioRepositorio
+                    .findByObjectIdHex(c.getIdUsuario().toHexString())
+                    .map(u -> u.getNombre())
+                    .orElse("Desconocido");
+
+            return ComentarioRespuestaDTO.builder()
+                    .id(c.getId().toHexString())
+                    .contenido(c.getContenido())
+                    .fecha(c.getFecha())
+                    .idUsuario(userId.toHexString())
+                    .nombreUsuario(nombreUsuario)
+                    .build();
+        }).toList();
     }
+
+    /*@Override
+    public List<ComentarioRespuestaDTO> obtenerComentariosPorReporte(String idReporte) {
+        List<Comentario> comentarios = comentarioRepositorio.findByIdReporte(new ObjectId(idReporte));
+
+        return comentarios.stream().map(c -> {
+            // En ComentarioServicioImpl
+            String nombreUsuario = usuarioRepositorio
+                    .findById(c.getIdUsuario()) // ← ObjectId directo, sin conversiones
+                    .map(u -> u.getNombre())
+                    .orElse("Desconocido");
+
+            return ComentarioRespuestaDTO.builder()
+                    .id(c.getId().toHexString())
+                    .contenido(c.getContenido())
+                    .fecha(c.getFecha())
+                    .idUsuario(c.getIdUsuario().toHexString())
+                    .nombreUsuario(nombreUsuario) // ✅ Lo incluye en la respuesta
+                    .build();
+        }).toList();
+    }*/
 }

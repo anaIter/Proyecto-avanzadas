@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
         codigoValidacionRepositorio.save(codigo);
 
         // Obtener el correo del usuario
-        Usuario usuario = usuarioRepositorio.findById(idUsuario.toHexString()).orElse(null);
+        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
         if (usuario != null) {
             EmailDTO email = new EmailDTO();
             email.setDestinatario(usuario.getEmail());
