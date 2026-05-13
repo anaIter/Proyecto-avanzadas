@@ -25,6 +25,7 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final ReporteRepositorio reporteRepositorio;
     private final HistorialEstadoReporteRepositorio historialEstadoRepo;
     private final UsuarioRepositorio usuarioRepositorio;
+    private final NotificacionPersistenciaServicio notificacionPersistenciaServicio; // ✅
 
     public MensajeDTO<String> crearReporte(CrearReporteDTO dto, String email) {
         Usuario usuario = usuarioRepositorio.findByEmail(email).get();
@@ -111,6 +112,7 @@ public class ReporteServicioImpl implements ReporteServicio {
                 reporte.setNivelImpacto(dto.getNivelImpacto());
             }
             reporteRepositorio.save(reporte);
+
             HistorialEstadoReporte historial = HistorialEstadoReporte.builder()
                     .idReporte(reporte.getId())
                     .estadoAnterior(estadoAnterior)
@@ -119,6 +121,21 @@ public class ReporteServicioImpl implements ReporteServicio {
                     .observacion("Cambio realizado automáticamente")
                     .build();
             historialEstadoRepo.save(historial);
+
+            // ✅ Notificar a cada seguidor — guardar en BD y enviar por WebSocket
+            if (reporte.getSeguidores() != null) {
+                for (ObjectId seguidorId : reporte.getSeguidores()) {
+                    notificacionPersistenciaServicio.crearYEnviar(
+                            seguidorId.toHexString(),
+                            new NotificacionDTO(
+                                    "Reporte actualizado: " + reporte.getTitulo(),
+                                    "El estado cambió de " + estadoAnterior + " a " + nuevoEstado,
+                                    "estado"
+                            )
+                    );
+                }
+            }
+
             return new MensajeDTO<>(false, "Estado del reporte actualizado y registrado en historial.");
         }
         return new MensajeDTO<>(true, "No se encontró el reporte con el ID especificado");
@@ -136,7 +153,6 @@ public class ReporteServicioImpl implements ReporteServicio {
         return new MensajeDTO<>(true, "El reporte no existe");
     }
 
-    // ── NUEVO: seguir / dejar de seguir un reporte ──────────────────
     @Override
     public MensajeDTO<String> seguirReporte(String idReporte, String idUsuario) {
         Optional<Reporte> opcional = reporteRepositorio.findById(new ObjectId(idReporte));
@@ -146,7 +162,6 @@ public class ReporteServicioImpl implements ReporteServicio {
         Reporte reporte = opcional.get();
         ObjectId userObjectId = new ObjectId(idUsuario);
 
-        // Inicializar lista si es null (reportes viejos sin el campo)
         if (reporte.getSeguidores() == null) {
             reporte.setSeguidores(new ArrayList<>());
         }
